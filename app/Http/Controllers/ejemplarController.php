@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ejemplar;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ejemplarController extends Controller
@@ -12,7 +13,9 @@ class ejemplarController extends Controller
      */
     public function index()
     {
-        return view('dashboard.ejemplar.index');
+        $ejemplares=Ejemplar::all();
+        return view('dashboard.ejemplar.index',['ejemplar'=>$ejemplares]);
+        
     }
 
     /**
@@ -20,7 +23,7 @@ class ejemplarController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.ejemplar.create');
     }
 
     /**
@@ -28,7 +31,12 @@ class ejemplarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ejemplar=new Ejemplar();
+        $ejemplar->Codigo=$request->input('codigo');
+        $ejemplar->Localizacion=$request->input('localizacion');
+        $ejemplar->save();
+       return view('dashboard.ejemplar.message',['msg'=>"Ejemplar creado con exito"]);
+       // return view('dashboard.ejemplar.index');
     }
 
     /**
@@ -42,24 +50,32 @@ class ejemplarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ejemplar $ejemplar)
+    public function edit($id)
     {
-        //
+        $ejemplar=Ejemplar::find($id);
+        return view('dashboard.ejemplar.edit',['ejemplar'=>$ejemplar]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ejemplar $ejemplar)
+    public function update(Request $request, $id)
     {
-        //
+        $ejemplar=Ejemplar::find($id);
+        $ejemplar->Codigo=$request->input('codigo');
+        $ejemplar->Localizacion=$request->input('localizacion');
+        $ejemplar->save();
+        return redirect("dashboard/ejemplar");
+ 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ejemplar $ejemplar)
+    public function destroy($id)
     {
-        //
+        $ejemplar=Ejemplar::find($id);
+        $ejemplar->delete();
+        return redirect("dashboard/ejemplar");
     }
 }

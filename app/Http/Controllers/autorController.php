@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autor;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class autorController extends Controller
@@ -12,7 +13,8 @@ class autorController extends Controller
      */
     public function index()
     {
-        return view('dashboard.autor.index');
+        $autores=Autor::all();
+        return view('dashboard.autor.index',['autor'=>$autores]);
     }
 
     /**
@@ -20,7 +22,7 @@ class autorController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.autor.create');
     }
 
     /**
@@ -28,7 +30,12 @@ class autorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $autor=new Autor();
+        $autor->Codigo=$request->input('codigo');
+        $autor->Nombre=$request->input('nombre');
+        $autor->save();
+       return view('dashboard.autor.message',['msg'=>"autor creado con exito"]);
+       // return view('dashboard.autor.index');
     }
 
     /**
@@ -42,24 +49,32 @@ class autorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Autor $autor)
+    public function edit($id)
     {
-        //
+        $autor=Autor::find($id);
+        return view('dashboard.autor.edit',['autor'=>$autor]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Autor $autor)
+    public function update(Request $request, $id)
     {
-        //
+        $autor=Autor::find($id);
+        $autor->Codigo=$request->input('codigo');
+        $autor->Nombre=$request->input('name');
+        $autor->save();
+        return redirect("dashboard/autor");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Autor $autor)
+    public function destroy($id)
     {
-        //
+        $autor=Autor::find($id);
+        $autor->delete();
+        return redirect("dashboard/autor");
+        
     }
 }
